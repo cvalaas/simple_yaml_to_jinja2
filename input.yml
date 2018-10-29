@@ -1,0 +1,38 @@
+snatpools:
+  - name: snat_snatpoolname
+    addr: 172.18.208.14
+  - name: snat_secondsnat
+    addr: 172.18.208.15
+
+nodes:
+  - name: node_h1132
+    addr: 10.1.1.1
+    desc: A stupid node
+  - name: node_h1133
+    addr: 10.1.1.2
+    desc: Another stupid node
+
+pools:
+  - name: pool1
+    service_ports: 443
+    monitor: https
+    desc: pool for www.ab2x4l.org
+    nodes: 
+      - node_h1132
+      - node_h1133
+  - name: pool2
+    service_ports: 443
+    monitor: https
+    desc: pool for www.manotaur.org
+    nodes: 
+      - node_h1132
+      - node_h1133
+
+vips:
+  - name: vip_dougsuxatvideogames
+    addr: 12.180.55.1
+    svc:  443
+    type: performance
+    desc: vip for www.csvrulesoverdsm4ever.com
+    pool: pool2
+    snat: snat_snatpoolname

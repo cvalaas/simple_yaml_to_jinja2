@@ -1,0 +1,15 @@
+{% for snat in data['snatpools'] %}
+create ltm snatpool {{ snat['name'] }} members add { {{ snat['addr'] }} }
+{% endfor %}
+
+{% for node in data['nodes'] %}
+create ltm node {{ node['name'] }} address {{ node['addr'] }} monitor icmp description {{ node['desc'] }}
+{% endfor %}
+
+{% for pool in data['pools'] %}
+create ltm pool {{ pool['name'] }} members add { {% for node in pool['nodes'] -%} {{ node }}:{{ pool['service_ports'] }} {% endfor %} } load-balancing-mode least-connections-member monitor {{ pool['monitor'] }} service-down-action reset
+{% endfor %}
+
+{% for vip in data['vips'] %}
+create ltm virtual {{ vip['name'] }} { destination {{ vip['addr'] }}:{{ vip['svc'] }} ip-protocol tcp mask 255.255.255.255 pool {{ vip['pool'] }} profiles add { {{ vip['type'] }} {}} translate-address enabled translate-port enabled source-address-translation { pool {{ vip['snat'] }} type snat }}
+{% endfor %}
