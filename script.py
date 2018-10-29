@@ -12,7 +12,7 @@ parser.add_argument('-t', '--template', action='store', help='jinja/template fil
 args = parser.parse_args()
 
 with open(args.yaml) as yaml_file:
-  data =  yaml.load(yaml_file)
+  data = yaml.load(yaml_file)
 
 template = ENV.get_template(args.template)
-print (template.render(data=data))
+print(template.render(data=data))
